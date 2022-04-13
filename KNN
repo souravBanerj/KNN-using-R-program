@@ -1,0 +1,84 @@
+setwd("C:\\Users\\soura\\OneDrive\\Desktop")       #upload the file
+data=read.csv("ca.csv")
+str(data)
+summary(data)
+hist(data$X1)                                      #for analyse purpose
+hist(data$X2)
+plot(data$X1,data$X2,col=data$Class
+,main="X1 VS X2",xlab="X1",ylab="X2")              #Check for the scatter plot
+points(2,2,col="Black",pch=4,lw=3)                 #consider the pt at 2,2
+
+
+p = 0.8                                            # Use 80% for training and 20% for validation
+
+train=sample.int(nrow(data),nrow(data)*p)          #taking sample with 80% training data
+str(train)                                         # str is used to check if it has taken 80% data or not(600*0.8=480)
+
+data_train=data[train,]                            #Train data 80%
+data_test=data[-train,]                            #Test data 20%
+
+
+library(class)                                     # Super simple Library for k-NN 
+set.seed (1)                                       #for getting similar variable
+Ypred_knn=knn(data_train[,c("X1","X2")],           # finding the knn
+              data_test[,c("X1","X2")],    
+              data_train$Class,                  
+              k=5) 
+
+table(data_test$Class,Ypred_knn)                  # Confusion matrix at k=5
+
+my_stat = function(Actual,Predicted) 
+{
+ confusion.table = table(Actual=Actual,Predicted=Predicted)    #create a function containing Actual and Predicted dataset for Testing data
+  output = list(confusion.table=confusion.table)
+
+T11 = confusion.table[1]
+  T12 = confusion.table[2]
+  T13 = confusion.table[3]
+  T21 = confusion.table[4]
+  T22 = confusion.table[5]
+  T23 = confusion.table[6]
+  T31 = confusion.table[7]
+  T32 = confusion.table[8]
+  T33 = confusion.table[9]
+  output$accuracy = (T11+T33)/sum(confusion.table)             #Accuracy and precision of Testing dataset
+  output$precission = (T33)/(T33+T12+T13+T21+T22+T23+T31+T32)
+
+
+  
+  return(output)
+}
+my_stat(Actual = data_test$Class,Predicted = Ypred_knn)           #Calling a function
+#This is for test data and we can see the confusion matrix for test data
+#similarly repeat for k=1..15
+library(class)                                     # Super simple Library for k-NN 
+set.seed (1)                                       #for getting similar variable
+Ypred_knn=knn(data_train[,c("X1","X2")],  
+              data_test[,c("X1","X2")],    
+              data_train$Class,                  
+              k=5) 
+
+table(data_test$Class,Ypred_knn)                  # Confusion matrix for Testing data
+
+my_stat = function(Actual,Predicted) 
+{
+ confusion.table = table(Actual=Actual,Predicted=Predicted)
+  output = list(confusion.table=confusion.table)
+
+T11 = confusion.table[1]
+  T12 = confusion.table[2]
+  T13 = confusion.table[3]
+  T21 = confusion.table[4]
+  T22 = confusion.table[5]
+  T23 = confusion.table[6]
+  T31 = confusion.table[7]
+  T32 = confusion.table[8]
+  T33 = confusion.table[9]
+  output$accuracy = (T11+T33)/sum(confusion.table)
+  output$precission = (T33)/(T33+T12+T13+T21+T22+T23+T31+T32)
+
+
+  
+  return(output)
+}
+my_stat(Actual = data_test$Class,Predicted = Ypred_knn)
